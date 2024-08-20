@@ -1,4 +1,4 @@
-# CONNExiIN Scrips
+# CONNExiN Scripts
 
 **Description**:
 
