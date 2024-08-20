@@ -18,7 +18,7 @@ output_basedir='derivatives'
 output_dir=${output_basedir}/preproc.fsl/anat/${subject_id}
 T1w='sub-01/ses-baseline/anat/sub-01_ses-baseline_T1w.nii'
 T1w_basename=$(basename $T1w | cut -d '.' -f 1 )
-fithr='0.33'
+fithr='0.3'
 
 echo "++ Starting..."
 
@@ -51,7 +51,7 @@ echo
 sleep 1
 echo "++ Starting Brain skull stripping..."
 echo
-bet ${T1w_basename}.nii.gz ${T1w_basename}_brain -v -R  -m  -B  -f $fithr
+bet ${T1w_basename}.nii.gz ${T1w_basename}_brain -v -R    -B  -f $fithr
 echo " +++ Done!!"
 
 exit
