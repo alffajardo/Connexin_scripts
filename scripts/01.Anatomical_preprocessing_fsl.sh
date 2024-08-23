@@ -55,3 +55,6 @@ bet ${T1w_basename}.nii.gz ${T1w_basename}_brain -v -R    -B  -f $fithr
 echo " +++ Done!!"
 
 exit
+
+## After we are done with the mask next step to do registration to the MNI template
+
