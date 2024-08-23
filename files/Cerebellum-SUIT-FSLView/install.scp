@@ -1,0 +1,9 @@
+## Installer Script for fsl- version of probablistic cerebellar
+## Make sure that FSL is installed and $FSLDIR set  
+sudo cp Cerebellum_SUIT.xml /usr/local/fsl/data/atlases 
+sudo mkdir $FSLDIR/data/atlases/Cerebellum
+sudo cp Cerebellum-SUIT-maxprob-thr25.nii /usr/local/fsl/data/atlases/Cerebellum 
+sudo cp Cerebellum-SUIT-prob.nii /usr/local/fsl/data/atlases/Cerebellum 
+sudo cp SUIT.nii /usr/local/fsl/data/standard
+sudo chmod a+r /usr/local/fsl/data/atlases/Cerebellum_SUIT.xml
+sudo chmod a+rx /usr/local/fsl/data/atlases/Cerebellum

@@ -1,0 +1,8 @@
+## Installer Script for fsl- version of probablistic cerebellar
+## Make sure that FSL is installed and $FSLDIR set  
+sudo cp Cerebellum_MNIfnirt.xml $FSLDIR/data/atlases 
+sudo mkdir $FSLDIR/data/atlases/Cerebellum
+sudo cp Cerebellum-MNIfnirt-maxprob-thr25.nii $FSLDIR/data/atlases/Cerebellum 
+sudo cp Cerebellum-MNIfnirt-prob.nii $FSLDIR/data/atlases/Cerebellum 
+sudo chmod a+r $FSLDIR/data/atlases/Cerebellum_MNIfnirt.xml
+sudo chmod a+rx $FSLDIR/data/atlases/Cerebellum
