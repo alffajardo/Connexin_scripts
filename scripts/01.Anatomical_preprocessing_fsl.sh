@@ -84,13 +84,16 @@ echo "++ Computing Non-Linear Transformation"
 sleep 2
 
 fnirt \
+ --verbose \
  --iout=${T1w_basename}_space-tpl_warped.nii.gz  \
  --in=${T1w_basename}_brain.nii.gz \
  --aff=${T1w_basename}_affine.mat \
  --cout=${T1w_basename}_space-tpl_warp \
  --jout=${T1w_basename}_jac \
  --logout=${T1w_basename}2MNI152_1mm_non-linear.log \
- --ref=${FSLDIR}/data/standard/MNI152_T1_1mm \
- --warpres=10,10,10 
+ --ref=${FSLDIR}/data/standard/MNI152_T1_1mm.nii.gz  \
+ --warpres=10,10,10
 
+
+# Now that we have created 
 
