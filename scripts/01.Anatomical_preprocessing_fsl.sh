@@ -54,7 +54,27 @@ echo
 bet ${T1w_basename}.nii.gz ${T1w_basename}_brain -v -R    -B  -f $fithr
 echo " +++ Done!!"
 
-exit
+
 
 ## After we are done with the mask next step to do registration to the MNI template
+
+
+# Linear registration with Flirt
+
+flirt -in  ${T1w_basename}_brain.nii.gz \
+    -ref ${FSLDIR}/data/standard/MNI152_T1_2mm_brain.nii.gz  \
+    -out ${T1w_basename}_space-tpl_affine.nii.gz \
+    -omat affine.mat \
+    -bins 256 \
+    -cost corratio \
+    -searchrx -90 90 \
+    -searchry -90 90 \
+    -searchrz -90 90 \
+    -dof 12 \
+    -interp trilinear
+
+
+# Now that we have done linear registration. Lets try non-linear registration
+
+
 
