@@ -61,10 +61,14 @@ echo " +++ Done!!"
 
 # Linear registration with Flirt
 
-flirt -in  ${T1w_basename}_brain.nii.gz \
-    -ref ${FSLDIR}/data/standard/MNI152_T1_2mm_brain.nii.gz  \
+sleep 2
+echo "++ Computing Linear Transformation"
+
+flirt \
+    -in  ${T1w_basename}_brain.nii.gz \
+    -ref ${FSLDIR}/data/standard/MNI152_T1_1mm_brain.nii.gz  \
     -out ${T1w_basename}_space-tpl_affine.nii.gz \
-    -omat affine.mat \
+    -omat ${T1w_basename}_affine.mat \
     -bins 256 \
     -cost corratio \
     -searchrx -90 90 \
@@ -72,9 +76,21 @@ flirt -in  ${T1w_basename}_brain.nii.gz \
     -searchrz -90 90 \
     -dof 12 \
     -interp trilinear
+echo " +++ Done!!"
 
+echo "++ Computing Non-Linear Transformation"
 
 # Now that we have done linear registration. Lets try non-linear registration
+sleep 2
 
+fnirt \
+ --iout=${T1w_basename}_space-tpl_warped.nii.gz  \
+ --in=${T1w_basename}_brain.nii.gz \
+ --aff=${T1w_basename}_affine.mat \
+ --cout=${T1w_basename}_space-tpl_warp \
+ --jout=${T1w_basename}_jac \
+ --logout=${T1w_basename}2MNI152_1mm_non-linear.log \
+ --ref=${FSLDIR}/data/standard/MNI152_T1_1mm \
+ --warpres=10,10,10 
 
 
