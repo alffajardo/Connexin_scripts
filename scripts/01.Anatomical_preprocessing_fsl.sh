@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Name: 
+# Name: 01.Anatomical_preprocessing_fsl
 
 
 # Note:
@@ -44,15 +44,32 @@ echo ++ Reorienting file...
 
 fslreorient2std  $T1w_basename ${T1w_basename}
 
-echo " +++ Done!!"
+echo "+++ Done!!"
+echo
+
+# Next step is to conduct Bias Fild correction in FSL
+sleep 1 
+echo "++ Starting Bias Field Correction..."
+
+fast  -B \
+--verbose \
+--nopve \
+-o ${T1w_basename}_Bfc \
+${T1w_basename}.nii.gz
+echo "+++ Done!!"
+mv  ${T1w_basename}_Bfc_restore.nii.gz ${T1w_basename}_Bfc.nii.gz
 echo
 
 # Brain extraction tool 
 sleep 1
 echo "++ Starting Brain skull stripping..."
 echo
-bet ${T1w_basename}.nii.gz ${T1w_basename}_brain -v -R    -B  -f $fithr
-echo " +++ Done!!"
+bet ${T1w_basename}_Bfc.nii.gz \
+${T1w_basename}_brain  -m \
+-v \
+-R  \
+-f $fithr 
+echo "+++ Done!!"
 
 
 
@@ -61,12 +78,13 @@ echo " +++ Done!!"
 
 # Linear registration with Flirt
 
-sleep 2
+sleep 1
+echo
 echo "++ Computing Linear Transformation"
 
 flirt \
-    -in  ${T1w_basename}_brain.nii.gz \
-    -ref ${FSLDIR}/data/standard/MNI152_T1_1mm_brain.nii.gz  \
+    -in  ${T1w_basename}_Bfc.nii.gz \
+    -ref ${FSLDIR}/data/standard/MNI152_T1_1mm.nii.gz  \
     -out ${T1w_basename}_space-tpl_affine.nii.gz \
     -omat ${T1w_basename}_affine.mat \
     -bins 256 \
@@ -76,17 +94,17 @@ flirt \
     -searchrz -90 90 \
     -dof 12 \
     -interp trilinear
-echo " +++ Done!!"
-
-echo "++ Computing Non-Linear Transformation"
+echo "+++ Done!!"
+echo
 
 # Now that we have done linear registration. Lets try non-linear registration
-sleep 2
+sleep 1
+echo "++ Computing Non-Linear Transformation"
 
 fnirt \
  --verbose \
  --iout=${T1w_basename}_space-tpl_warped.nii.gz  \
- --in=${T1w_basename}_brain.nii.gz \
+ --in=${T1w_basename}_Bfc.nii.gz \
  --aff=${T1w_basename}_affine.mat \
  --cout=${T1w_basename}_space-tpl_warp \
  --jout=${T1w_basename}_jac \
@@ -94,6 +112,13 @@ fnirt \
  --ref=${FSLDIR}/data/standard/MNI152_T1_1mm.nii.gz  \
  --warpres=10,10,10
 
+# Now that apply the matrix transformation to obtain the skull stripped imaged in MNI
+# space
 
-# Now that we have created 
+applywarp \
+ --in=${T1w_basename}_brain.nii.gz \
+ --ref=${FSLDIR}/data/standard/MNI152_T1_1mm.nii.gz \
+ --coef=${T1w_basename}_space-tpl_warp.nii.gz \
+ --premat=${T1w_basename}_affine.mat \
+ --out=${T1w_basename}_space-tpl_brain_warped.nii.gz
 
